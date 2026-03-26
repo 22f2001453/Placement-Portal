@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{{ 'Your Placement Drives' if role == 'company' else 'Available Placement Drives' }}</h2>
+    {% if role == 'company' %}
+    <a href="{{ url_for('create_drive') }}" class="btn btn-primary">Post New Drive</a>
+    {% endif %}
+</div>
+
+{% if not drives %}
+<div class="alert alert-info border-0 shadow-sm">
+    No placement drives found at the moment.
+</div>
+{% else %}
+<div class="row row-cols-1 row-cols-md-2 g-4">
+    {% for drive in drives %}
+    <div class="col">
+        <div class="card h-100 shadow-sm border-0 shadow-hover">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h5 class="card-title fw-bold text-primary mb-0">{{ drive.job_title }}</h5>
+                    {% set status_class = 'warning' %}
+                    {% if drive.status == 'approved' %}{% set status_class = 'success' %}{% endif %}
+                    {% if drive.status == 'closed' %}{% set status_class = 'secondary' %}{% endif %}
+                    
+                    {% if role == 'company' %}
+                    <span class="badge bg-{{ status_class }}">{{ drive.status|capitalize }}</span>
+                    {% endif %}
+                </div>
+                
+                <h6 class="card-subtitle mb-3 text-muted">{{ drive.company.company_name }}</h6>
+                
+                <p class="card-text text-truncate">{{ drive.job_description }}</p>
+                
+                <div class="mb-3">
+                    <small class="d-block text-muted"><strong>Eligibility:</strong> {{ drive.eligibility }}</small>
+                    <small class="d-block text-muted"><strong>Deadline:</strong> {{ drive.deadline.strftime('%b %d, %Y') }}</small>
+                </div>
+                
+            </div>
+            <div class="card-footer bg-transparent border-top p-3 d-flex justify-content-between align-items-center">
+                {% if role == 'company' %}
+                    <a href="{{ url_for('company_applications', drive_id=drive.id) }}" class="btn btn-sm btn-outline-primary">
+                        View Applications <span class="badge bg-light text-dark ms-1">{{ drive.applications|length }}</span>
+                    </a>
+                    
+                    {% if drive.status != 'closed' %}
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-light dropdown-toggle border" type="button" data-bs-toggle="dropdown">
+                            Manage
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{{ url_for('edit_drive', id=drive.id) }}">Edit Drive</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="{{ url_for('close_drive', id=drive.id) }}">Close Drive</a></li>
+                        </ul>
+                    </div>
+                    {% endif %}
+                {% elif role == 'student' %}
+                    {% if drive.id in applied_ids %}
+                        <button class="btn btn-secondary w-100" disabled>Applied</button>
+                    {% else %}
+                        <a href="{{ url_for('apply_drive', drive_id=drive.id) }}" class="btn btn-primary w-100">Apply Now</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

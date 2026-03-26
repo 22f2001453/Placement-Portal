@@ -1,0 +1,13 @@
+body {
+    background-color: #f4f7f6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.main-content {
+    min-height: 80vh;
+}
+.card {
+    transition: all 0.2s ease-in-out;
+}
+.card:hover {
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+}

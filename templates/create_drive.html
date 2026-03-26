@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0 rounded-3">
+            <div class="card-body p-5">
+                <h3 class="mb-4">{{ 'Edit Placement Drive' if drive else 'Post New Placement Drive' }}</h3>
+                
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="job_title" class="form-label">Job Title</label>
+                        <input type="text" class="form-control" id="job_title" name="job_title" value="{{ drive.job_title if drive else '' }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="job_description" class="form-label">Job Description</label>
+                        <textarea class="form-control" id="job_description" name="job_description" rows="5" required>{{ drive.job_description if drive else '' }}</textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="eligibility" class="form-label">Eligibility Criteria</label>
+                        <input type="text" class="form-control" id="eligibility" name="eligibility" placeholder="e.g. B.Tech CS 7.0+ CGPA" value="{{ drive.eligibility if drive else '' }}" required>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="deadline" class="form-label">Application Deadline</label>
+                        <input type="date" class="form-control" id="deadline" name="deadline" value="{{ drive.deadline.strftime('%Y-%m-%d') if drive else '' }}" required>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('company_drives') }}" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">{{ 'Save Changes' if drive else 'Post Drive' }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
